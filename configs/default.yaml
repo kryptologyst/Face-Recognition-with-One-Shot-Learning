@@ -1,0 +1,47 @@
+# Default configuration for face recognition with one-shot learning
+model:
+  name: "siamese_resnet"  # siamese_resnet, clip_siamese
+  backbone: "resnet18"     # resnet18, resnet34, resnet50, efficientnet_b0
+  embedding_dim: 512
+  dropout: 0.3
+  pretrained: true
+
+data:
+  input_size: [112, 112]
+  batch_size: 32
+  num_workers: 4
+  data_dir: "data/raw"
+  processed_dir: "data/processed"
+  augmentation:
+    horizontal_flip: 0.5
+    rotation: 15
+    brightness: 0.2
+    contrast: 0.2
+    saturation: 0.2
+    hue: 0.1
+
+training:
+  epochs: 100
+  learning_rate: 1e-4
+  weight_decay: 1e-4
+  scheduler: "cosine"  # cosine, step, none
+  warmup_epochs: 5
+  gradient_clip: 1.0
+  accumulation_steps: 1
+  mixed_precision: true
+
+evaluation:
+  metrics: ["accuracy", "cmc", "tpr_fpr"]
+  k_values: [1, 5, 10]
+  threshold: 0.5
+
+logging:
+  log_dir: "logs"
+  save_dir: "checkpoints"
+  log_interval: 10
+  save_interval: 10
+  use_wandb: false
+  project_name: "face-recognition-one-shot"
+
+device: "auto"  # auto, cuda, mps, cpu
+seed: 42
